@@ -30,14 +30,8 @@ import { getTimeFrameRange, generateChartPoints } from "../components/Helpers";
 import { CATEGORY_ICONS } from "../assets/color";
 import { expensePageStyles as styles } from "../assets/dummyStyles";
 
-const API_BASE = "http://localhost:4000/api";
+const API_BASE = "https://spendwise-iaes.onrender.com/api";
 
-/**
- * Helper: convert date (or datetime) to ISO by attaching client current time
- * - If `dateValue` is "YYYY-MM-DD" (length 10) => attach current HH:MM:SS
- * - Otherwise attempt to parse and return ISO
- * - Fallback to now if parsing fails
- */
 function toIsoWithClientTime(dateValue) {
   if (!dateValue) {
     return new Date().toISOString();
@@ -121,7 +115,7 @@ const ExpensePage = () => {
         console.error("Failed to fetch expense overview:", err);
       }
     },
-    [timeFrame, getAuthHeaders],
+    [timeFrame, getAuthHeaders]
   );
 
   // Initial load
@@ -138,11 +132,11 @@ const ExpensePage = () => {
   // Time frame range and chart points
   const timeFrameRange = useMemo(
     () => getTimeFrameRange(timeFrame, selectedMonth),
-    [timeFrame, selectedMonth],
+    [timeFrame, selectedMonth]
   );
   const chartPoints = useMemo(
     () => generateChartPoints(timeFrame, timeFrameRange),
-    [timeFrame, timeFrameRange],
+    [timeFrame, timeFrameRange]
   );
 
   // Function to check if a date is within a range
@@ -164,16 +158,16 @@ const ExpensePage = () => {
       (outletTransactions || [])
         .filter((t) => t.type === "expense")
         .sort((a, b) => new Date(b.date) - new Date(a.date)),
-    [outletTransactions],
+    [outletTransactions]
   );
 
   // Filter transactions by time frame
   const timeFrameTransactions = useMemo(
     () =>
       expenseTransactions.filter((t) =>
-        isDateInRange(t.date, timeFrameRange.start, timeFrameRange.end),
+        isDateInRange(t.date, timeFrameRange.start, timeFrameRange.end)
       ),
-    [expenseTransactions, timeFrameRange, isDateInRange],
+    [expenseTransactions, timeFrameRange, isDateInRange]
   );
 
   // Filter logic — month/year use current calendar by default
@@ -223,9 +217,9 @@ const ExpensePage = () => {
     () =>
       filteredTransactions.reduce(
         (sum, t) => sum + Math.round(Number(t.amount || 0)),
-        0,
+        0
       ),
-    [filteredTransactions],
+    [filteredTransactions]
   );
 
   const averageExpense = useMemo(
@@ -233,7 +227,7 @@ const ExpensePage = () => {
       filteredTransactions.length
         ? Math.round(totalExpense / filteredTransactions.length)
         : 0,
-    [filteredTransactions, totalExpense],
+    [filteredTransactions, totalExpense]
   );
 
   // Prepare chart data
@@ -246,9 +240,9 @@ const ExpensePage = () => {
         timeFrame === "daily"
           ? d.hour === transDate.getHours()
           : timeFrame === "yearly"
-            ? d.date.getMonth() === transDate.getMonth()
-            : d.date.getDate() === transDate.getDate() &&
-              d.date.getMonth() === transDate.getMonth(),
+          ? d.date.getMonth() === transDate.getMonth()
+          : d.date.getDate() === transDate.getDate() &&
+            d.date.getMonth() === transDate.getMonth()
       );
       point && (point.expense += Math.round(Number(transaction.amount)));
     });
@@ -278,7 +272,13 @@ const ExpensePage = () => {
       const serverMsg = err?.response?.data?.message;
       alert(
         serverMsg ||
-          `Server error while ${method === "post" ? "adding" : method === "put" ? "updating" : "deleting"} expense.`,
+          `Server error while ${
+            method === "post"
+              ? "adding"
+              : method === "put"
+              ? "updating"
+              : "deleting"
+          } expense.`
       );
       throw err;
     } finally {
@@ -309,7 +309,7 @@ const ExpensePage = () => {
       if (!addedDateInRange) {
         setTimeFrame("monthly");
         setSelectedMonth(
-          new Date(addedDate.getFullYear(), addedDate.getMonth(), 1),
+          new Date(addedDate.getFullYear(), addedDate.getMonth(), 1)
         );
       }
 
@@ -390,7 +390,7 @@ const ExpensePage = () => {
         }));
         exportToExcel(
           exportData,
-          `expenses_${new Date().toISOString().slice(0, 10)}`,
+          `expenses_${new Date().toISOString().slice(0, 10)}`
         );
       } catch (e) {
         console.error("Fallback export failed:", e);
@@ -490,8 +490,8 @@ const ExpensePage = () => {
             {timeFrame === "daily"
               ? "Hourly"
               : timeFrame === "yearly"
-                ? "Monthly"
-                : "Daily"}{" "}
+              ? "Monthly"
+              : "Daily"}{" "}
             Expense Trends
             <span className="text-sm text-gray-500 font-normal">
               {" "}
@@ -565,7 +565,7 @@ const ExpensePage = () => {
                       strokeWidth={2}
                       strokeDasharray="3 3"
                     />
-                  ),
+                  )
               )}
             </AreaChart>
           </ResponsiveContainer>

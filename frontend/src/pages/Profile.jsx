@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
-const BASE_URL = "http://localhost:4000/api";
+const BASE_URL = "https://spendwise-iaes.onrender.com/api";
 
 Modal.setAppElement("#root");
 // Move PasswordInput component outside of ProfilePage to prevent recreation on every render
@@ -43,12 +43,12 @@ const PasswordInput = memo(
       </div>
       {error && <p className={profileStyles.errorText}>{error}</p>}
     </div>
-  ),
+  )
 );
 
 PasswordInput.displayName = "PasswordInput";
 
-const Profile = ({onUpdateProfile, onLogout }) => {
+const Profile = ({ onUpdateProfile, onLogout }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
     name: "",
@@ -102,7 +102,7 @@ const Profile = ({onUpdateProfile, onLogout }) => {
         setLoading(false);
       }
     },
-    [getAuthToken, navigate],
+    [getAuthToken, navigate]
   );
 
   // to fetch current user
@@ -141,7 +141,7 @@ const Profile = ({onUpdateProfile, onLogout }) => {
   }, []);
 
   // save profile
-// save profile
+  // save profile
   const handleSaveProfile = async () => {
     try {
       const data = await handleApiRequest("put", "/user/profile", tempUser);
