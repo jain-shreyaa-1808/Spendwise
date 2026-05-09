@@ -20,7 +20,8 @@ export const sendContactEmail = async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
-
+console.log("mail:", process.env.EMAIL_USER);
+  
     await transporter.sendMail({
       from: `"SpendWise Contact" <${process.env.EMAIL_USER}>`,
       to: process.env.OWNER_EMAIL || process.env.EMAIL_USER,
